@@ -8,13 +8,6 @@ class DatabaseConnector
     {
         $settings = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/settings.conf", true);
 
-        if($settings['general']['debug']) {
-            echo "Debug mode is on.";
-            error_reporting(E_ALL);
-        } else {
-            error_reporting(0);
-        }
-
         try {
             // Create a connection instance using DSN
             $dsn = "mysql:host=" . $settings['database']['host'] . ";port=".$settings['database']['port'].";dbname=" . $settings['database']['database'];

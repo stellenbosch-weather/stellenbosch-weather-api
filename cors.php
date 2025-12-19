@@ -1,5 +1,14 @@
 <?php
 
+
+$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/settings.conf", true);
+
+if($settings['general']['debug']) {
+    error_reporting(E_ALL);
+} else {
+    error_reporting(0);
+}
+
 $allowedOrigins = array(
     'http://localhost:8082',
     'http://weather.sun.ac.za',
