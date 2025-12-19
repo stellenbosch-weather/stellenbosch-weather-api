@@ -1,7 +1,7 @@
 <?php
 
 
-$settings = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/settings.conf", true);
+$settings = parse_ini_file(__DIR__ . "/settings.conf", true);
 
 if($settings['general']['debug']) {
     error_reporting(E_ALL);

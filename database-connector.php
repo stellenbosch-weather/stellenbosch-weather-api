@@ -6,7 +6,7 @@ class DatabaseConnector
 
     function __construct()
     {
-        $settings = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/settings.conf", true);
+        $settings = parse_ini_file(__DIR__ . "/settings.conf", true);
 
         try {
             // Create a connection instance using DSN
