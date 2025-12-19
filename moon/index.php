@@ -1,5 +1,7 @@
 <?php
 
+require_once '../cors.php';
+
 $texturePath = __DIR__ . '/lroc_color_2k.jpg';
 if (!file_exists($texturePath)) {
     http_response_code(500);
@@ -26,7 +28,7 @@ if ($tmpOut === false) {
     exit;
 }
 @unlink($tmpOut);
-$tmpOutPng = $tmpOut . '.jpg';
+$tmpOutPng = $tmpOut . '.png';
 
 $geometry = '800x800';
 
@@ -57,7 +59,7 @@ if (@file_put_contents($tmpCfg, $cfg) === false) {
 }
 
 $cmd =
-    './xplanet' .
+    '../xplanet/xplanet' .
     ' -num_times 1' .
     ' -config ' . escapeshellarg($tmpCfg) .
     ' -geometry ' . escapeshellarg($geometry) .
