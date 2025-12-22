@@ -18,12 +18,12 @@ class DatabaseConnector
             $conn = new PDO(
                 $dsn,
                 $settings['database']['username'],
-                $settings['database']['password']
+                $settings['database']['password'],
+                array(
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_TIMEOUT => $timeout_seconds
+                )
             );
-
-            // Set the PDO error mode to exception for robust error handling
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $conn->setAttribute(PDO::ATTR_TIMEOUT, $timeout_seconds);
 
             $this->connection = $conn;
         } catch (PDOException $e) {
