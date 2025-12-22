@@ -88,6 +88,7 @@ function downloadFile($file)
         'mr' => __DIR__ . '/Weather_mmroof.zip',
         'ee' => __DIR__ . '/WeatherEE.zip',
         'mm' => __DIR__ . '/WeatherMM.zip',
+        'sb20102020' => __DIR__ . '/SB_TMin_2010-2020.zip'
     ];
 
 // Validate the file parameter
@@ -112,4 +113,67 @@ function downloadFile($file)
 
 // Output the file
     readfile($file_path);
+}
+
+function downloadHistory($start, $end) {
+
+    $db = new DatabaseConnector();
+    $conn = $db->getConnection();
+
+    $sql = "SELECT * FROM SB_TMin WHERE TimeStamp BETWEEN :start AND :end ORDER BY TimeStamp";
+    $stmt = $conn->prepare($sql);
+
+    $timezone = new DateTimeZone('Africa/Johannesburg');
+    $start->setTimezone($timezone);
+    $end->setTimezone($timezone);
+
+    $startStr = $start->format('Y-m-d H:i:s');
+    $endStr = $end->format('Y-m-d H:i:s');
+
+    $stmt->bindParam(':start', $startStr);
+    $stmt->bindParam(':end', $endStr);
+    $stmt->execute();
+
+    set_time_limit(300);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    set_time_limit(10);
+
+    // Create temporary CSV file
+    $csv_filename = 'weather_data_sb_' . $start->getTimestamp() . '_' . $end->getTimestamp() . '.csv';
+    $csv_path = sys_get_temp_dir() . '/' . $csv_filename;
+
+    $csv_file = fopen($csv_path, 'w');
+
+    // Write CSV header
+    if (!empty($result)) {
+        fputcsv($csv_file, array_keys($result[0]));
+
+        // Write data rows
+        foreach ($result as $row) {
+            fputcsv($csv_file, $row);
+        }
+    }
+
+    fclose($csv_file);
+
+    // Create ZIP file
+    $zip_filename = 'weather_data_sb_' . $start->getTimestamp() . '_' . $end->getTimestamp() . '.zip';
+    $zip_path = sys_get_temp_dir() . '/' . $zip_filename;
+
+    $zip = new ZipArchive();
+    if ($zip->open($zip_path, ZipArchive::CREATE) === TRUE) {
+        $zip->addFile($csv_path, $csv_filename);
+        $zip->close();
+    }
+
+    // Send ZIP file to browser
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="' . $zip_filename . '"');
+    header('Content-Length: ' . filesize($zip_path));
+
+    readfile($zip_path);
+
+    // Clean up temporary files
+    unlink($csv_path);
+    unlink($zip_path);
 }

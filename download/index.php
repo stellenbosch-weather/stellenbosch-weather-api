@@ -23,7 +23,6 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 // Get the parameters from JSON POST data
-$file = isset($json_data['file']) ? $json_data['file'] : '';
 $agree = isset($json_data['agree']) ? $json_data['agree'] : '';
 $email = isset($json_data['email']) ? $json_data['email'] : '';
 
@@ -39,11 +38,25 @@ if (empty($email) || !validEmail($email)) {
     die('A valid email address is required.');
 }
 
-if (!empty($file)) {
+if (isset($json_data['file'])) {
+    $file = $json_data['file'];
     downloadFile($file);
 }
+else if (isset($json_data['start']) && isset($json_data['end'])) {
+    try {
+        $start = (new DateTime())->setTimestamp(intval($json_data['start']));
+        $end = (new DateTime())->setTimestamp(intval($json_data['end']));
+    } catch (Exception $e) {
+        http_response_code(400);
+        die('Invalid timestamp values provided.');
+    }
+    downloadHistory($start, $end);
+}
+else {
+    http_response_code(400);
+    die('Either a file or a time range (start and end) must be specified.');
+}
 
-// TODO sonbesie history for a specific time range
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;
