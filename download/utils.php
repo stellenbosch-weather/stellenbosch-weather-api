@@ -84,11 +84,11 @@ function downloadFile($file)
 {
     // Define allowed files with their paths
     $allowed_files = [
-        'dc' => __DIR__ . 'Weather_decingel.zip',
-        'mr' => __DIR__ . 'Weather_mmroof.zip',
-        'ee' => __DIR__ . 'WeatherEE.zip',
-        'mm' => __DIR__ . 'WeatherMM.zip',
-        'sb20102020' => __DIR__ . 'SB_TMin_2010-2020.zip'
+        'dc' => 'Weather_decingel.zip',
+        'mr' => 'Weather_mmroof.zip',
+        'ee' => 'WeatherEE.zip',
+        'mm' => 'WeatherMM.zip',
+        'sb20102020' => 'SB_TMin_2010-2020.zip'
     ];
 
 // Validate the file parameter
