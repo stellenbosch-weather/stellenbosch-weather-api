@@ -5,9 +5,13 @@ $settings = parse_ini_file(__DIR__ . "/settings.conf", true);
 
 if($settings['general']['debug']) {
     error_reporting(E_ALL);
+    ini_set('display_errors', '1');
 } else {
-    error_reporting(0);
+    error_reporting(E_ALL);
+    ini_set('display_errors', '0');
 }
+ini_set('log_errors', '1');
+ini_set('error_log', $_SERVER['HOME'].'/php_error.log');
 
 $allowedOrigins = array(
     'http://localhost:8082',
