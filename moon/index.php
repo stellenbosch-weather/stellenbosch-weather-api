@@ -30,7 +30,7 @@ if ($tmpOut === false) {
 @unlink($tmpOut);
 $tmpOutPng = $tmpOut . '.png';
 
-$geometry = '800x800';
+$geometry = '1024x1024';
 
 /**
  * Many xplanet builds expect the body texture ("map") to be set in a config file,
@@ -68,6 +68,8 @@ $cmd =
     ' -origin earth' .
     ' -output ' . escapeshellarg($tmpOutPng) .
     ' -background black' .
+    ' -latitude -34' .
+    ' -longitude 19' .
     ' 2>&1';
 
 $out = array();
@@ -82,6 +84,17 @@ if ($exitCode !== 0 || !file_exists($tmpOutPng) || filesize($tmpOutPng) === 0) {
     echo "xplanet render failed.\n\nTried command:\n" . $cmd . "\n\nExit code:\n" . $exitCode . "\n\nOutput:\n" . implode("\n", $out) . "\n\n";
     exit;
 }
+
+$img = @imagecreatefrompng($tmpOutPng);
+if ($img !== false) {
+    $rotated = imagerotate($img, 180, 0);
+    if ($rotated !== false) {
+        imagepng($rotated, $tmpOutPng);
+        imagedestroy($rotated);
+    }
+    imagedestroy($img);
+}
+
 
 @rename($tmpOutPng, $cacheFile);
 header('Content-Type: image/png');
