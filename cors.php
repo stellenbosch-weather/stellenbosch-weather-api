@@ -1,17 +1,15 @@
 <?php
 
+ini_set('log_errors', '1');
+ini_set('error_log', dirname(__FILE__) . '/php_errors.log');
+error_reporting(E_ALL);
 
 $settings = parse_ini_file(__DIR__ . "/settings.conf", true);
-
 if($settings['general']['debug']) {
-    error_reporting(E_ALL);
     ini_set('display_errors', '1');
 } else {
-    error_reporting(E_ALL);
     ini_set('display_errors', '0');
 }
-ini_set('log_errors', '1');
-ini_set('error_log', dirname(__FILE__) . '/php_error.log');
 
 $allowedOrigins = array(
     'http://localhost:8082',
