@@ -1,7 +1,9 @@
 <?php
 
+set_time_limit(10);
+
 ini_set('log_errors', '1');
-ini_set('error_log', dirname(__FILE__) . '/php_errors.log');
+ini_set('error_log', __DIR__ . '/php_errors.log');
 error_reporting(E_ALL);
 
 $settings = parse_ini_file(__DIR__ . "/settings.conf", true);
@@ -28,5 +30,3 @@ if (in_array($origin, $allowedOrigins)) {
 if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
-
-set_time_limit(10);

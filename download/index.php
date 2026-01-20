@@ -1,10 +1,13 @@
 <?php
-error_reporting(E_ALL);
-
 require_once '../cors.php';
 include "utils.php";
 
-# Start timer
+// Allow 5 minutes for a download
+set_time_limit(300);
+// Require more memory than largest dump file
+ini_set('memory_limit', '256M');
+
+// Start timer
 $time_start = microtime(true);
 
 // Only allow POST requests
