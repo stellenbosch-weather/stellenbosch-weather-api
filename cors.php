@@ -11,7 +11,7 @@ if($settings['general']['debug']) {
     ini_set('display_errors', '0');
 }
 ini_set('log_errors', '1');
-ini_set('error_log', $_SERVER['HOME'].'/php_error.log');
+ini_set('error_log', dirname(__FILE__) . '/php_error.log');
 
 $allowedOrigins = array(
     'http://localhost:8082',
@@ -27,7 +27,7 @@ if (in_array($origin, $allowedOrigins)) {
 }
 
 // Exit early if this is a preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
 
