@@ -1,12 +1,14 @@
 <?php
 
+require_once __DIR__ . '/settings-loader.php';
+
 class DatabaseConnector
 {
     private $connection;
 
     function __construct()
     {
-        $settings = parse_ini_file(__DIR__ . "/settings.conf", true);
+        $settings = loadSettings();
 
         try {
             // Create a connection instance using DSN
