@@ -37,10 +37,10 @@ try {
 
     // Merge stats into the result
     if ($result) {
-        $result['min_temp'] = $minData['AirTC_Avg'];
-        $result['min_temp_time'] = $minData['Time'];
-        $result['max_temp'] = $maxData['AirTC_Avg'];
-        $result['max_temp_time'] = $maxData['Time'];
+        $result['min_temp'] = $minData ? $minData['AirTC_Avg'] : null;
+        $result['min_temp_time'] = $minData ? $minData['Time'] : null;
+        $result['max_temp'] = $maxData ? $maxData['AirTC_Avg'] : null;
+        $result['max_temp_time'] = $maxData ? $maxData['Time'] : null;
     }
 
     echo json_encode($result);
