@@ -35,12 +35,20 @@ try {
     $maxStmt->execute(['start' => $todayStart, 'end' => $todayEnd]);
     $maxData = $maxStmt->fetch(PDO::FETCH_ASSOC);
 
+    // Sum the minute totals since local midnight, preserving NULL when unavailable.
+    $rainSql = "SELECT SUM(Rain_1_Tot) FROM SB_TMin
+                WHERE TimeStamp >= :start AND TimeStamp <= :now";
+    $rainStmt = $conn->prepare($rainSql);
+    $rainStmt->execute(['start' => $todayStart, 'now' => date('Y-m-d H:i:s')]);
+    $rainToday = $rainStmt->fetchColumn();
+
     // Merge stats into the result
     if ($result) {
         $result['min_temp'] = $minData ? $minData['AirTC_Avg'] : null;
         $result['min_temp_time'] = $minData ? $minData['Time'] : null;
         $result['max_temp'] = $maxData ? $maxData['AirTC_Avg'] : null;
         $result['max_temp_time'] = $maxData ? $maxData['Time'] : null;
+        $result['rain_today'] = $rainToday !== null && $rainToday !== false ? (float) $rainToday : null;
     }
 
     echo json_encode($result);
